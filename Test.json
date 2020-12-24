@@ -1,0 +1,15 @@
+{
+  "String" : "That's a value!",
+  "A number" : 2020.12,
+  "" : null,
+  
+  "array" : [null, 1, "nice", 0.25],
+  
+  "PERSONAL BLOCK" : {
+    "name" : "John Doe",
+    "age" : 25,
+    "spouse" : null,
+    
+    "hobbies" : ["Painting", "Writing"],
+  },
+}
