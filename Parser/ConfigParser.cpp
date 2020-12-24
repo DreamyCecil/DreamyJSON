@@ -222,7 +222,7 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
     
   // parsing failed
   } catch (JSON_Exception exError) {
-    JSON_Print("%s\n", exError.strError);
+    JSON_Error("%s\n", exError.strError);
     return exError.eCode;
   }
   
@@ -232,7 +232,7 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
 
   // no tokens
   if (_ctTokens <= 0) {
-    JSON_Print("Cannot parse the config: JSON config is empty!\n");
+    JSON_Error("Cannot parse the config: JSON config is empty!\n");
     return DJSON_EMPTY;
   }
   
@@ -248,7 +248,7 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
   }
   
   if (iFailed > 0) {
-    JSON_Print("Cannot parse the config \"%s\" (Invalid token on line %d)\n", strConfigFile, iFailed);
+    JSON_Error("Cannot parse the config \"%s\" (Invalid token on line %d)\n", strConfigFile, iFailed);
     
     cbConfig.Clear();
     return DJSON_TOKEN;

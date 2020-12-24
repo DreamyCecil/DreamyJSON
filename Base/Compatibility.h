@@ -35,6 +35,8 @@ struct JSON_Exception {
 DJSON_API void JSON_Throw(const char *strFormat, const JSON_ERROR &eCode, ...);
 // Print out formatted string
 DJSON_API void JSON_Print(const char *strFormat, ...);
+// Print out an error
+DJSON_API void JSON_Error(const char *strFormat, ...);
 
 // Load the config file
 DJSON_API JSON_String JSON_LoadConfigFile(JSON_String strConfigFile);

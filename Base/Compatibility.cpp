@@ -22,6 +22,7 @@ SOFTWARE. */
 
 // Custom functions
 extern void (*_pJSON_PrintFunction)(const char *) = NULL;
+extern void (*_pJSON_ErrorFunction)(const char *) = NULL;
 extern JSON_String (*_pJSON_LoadConfigFile)(JSON_String) = NULL;
 
 // Throw formatted exception
@@ -54,6 +55,32 @@ void JSON_Print(const char *strFormat, ...) {
   }
   
   _pJSON_PrintFunction(strOut.c_str());
+};
+
+// Print out an error
+void JSON_Error(const char *strFormat, ...) {
+  const int ctBufferSize = 256;
+  char strBuffer[ctBufferSize+1];
+
+  va_list arg;
+  va_start(arg, strFormat);
+  _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
+
+  JSON_String strOut = strBuffer;
+  
+  // check the error function
+  if (_pJSON_ErrorFunction == NULL) {
+    // check the print function
+    if (_pJSON_PrintFunction == NULL) {
+      printf(strOut.c_str());
+      return;
+    }
+    
+    _pJSON_PrintFunction(strOut.c_str());
+    return;
+  }
+  
+  _pJSON_ErrorFunction(strOut.c_str());
 };
 
 // Load the config file
