@@ -40,7 +40,7 @@ int main() {
   const char *strFile = "Test.json";
 
   // Try to parse the file
-  if (ParseConfig(strFile, cbConfig) == JSONERROR::OK) {
+  if (ParseConfig(strFile, cbConfig) == DJSON_OK) {
     // Print out the loaded config
     JSON_String strConfig;
     cbConfig.Print(strConfig);
