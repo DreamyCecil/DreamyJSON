@@ -48,5 +48,5 @@ int main() {
     std::cout << "JSON file:\n" << strConfig << "\n";
   }
 
-	return 0;
+  return 0;
 };
