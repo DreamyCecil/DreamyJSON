@@ -1,7 +1,7 @@
 # Dreamy JSON
-========================
 
 This is a small self-made JSON config parser that's based on YellowAfterlife's interpreter tutorials ( https://yal.cc/interpreters-guide/ ).
+
 Uses Dreamy Structures in its base ( https://github.com/DreamyCecil/DreamyStructures ).
 
 Building

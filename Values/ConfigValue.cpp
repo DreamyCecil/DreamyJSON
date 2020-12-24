@@ -147,26 +147,30 @@ void CConfigValue::Clear(void) {
 // Print the value
 void CConfigValue::PrintValue(JSON_String &strValue, const int &iLevel, bool bHasKey) {
   const int iKeyLevel = iLevel * !bHasKey;
+  JSON_StringStream strPrint;
 
   switch (cv_eType) {
-    case CVT_NULL:  strValue = JSON_ConfigPrintF("%snull", JSON_ConfigTabs(iKeyLevel).c_str()); break;
-    case CVT_INDEX: strValue = JSON_ConfigPrintF("%s%d", JSON_ConfigTabs(iKeyLevel).c_str(), cv_iValue); break;
-    case CVT_FLOAT: strValue = JSON_ConfigPrintF("%s%f", JSON_ConfigTabs(iKeyLevel).c_str(), cv_fValue); break;
+    case CVT_NULL:   strPrint << JSON_ConfigTabs(iKeyLevel).c_str() << "null"; break;
+    case CVT_INDEX:  strPrint << JSON_ConfigTabs(iKeyLevel).c_str() << cv_iValue; break;
+    case CVT_FLOAT:  strPrint << JSON_ConfigTabs(iKeyLevel).c_str() << cv_fValue; break;
+    case CVT_STRING: strPrint << JSON_ConfigTabs(iKeyLevel).c_str() << "\"" << cv_strValue << "\""; break;
 
-    case CVT_STRING:
-      strValue = JSON_ConfigPrintF("%s\"%s\"", JSON_ConfigTabs(iKeyLevel).c_str(), cv_strValue);
-      break;
-
-    case CVT_ARRAY:
-      cv_caValue->Print(strValue, iLevel);
-      strValue = JSON_ConfigPrintF("%s%s", JSON_ConfigTabs(iKeyLevel).c_str(), strValue.c_str());
-      break;
+    case CVT_ARRAY: {
+      JSON_String strArray;
+      cv_caValue->Print(strArray, iLevel);
       
-    case CVT_BLOCK:
-      cv_cbValue->Print(strValue, iLevel);
-      strValue = JSON_ConfigPrintF("%s%s", JSON_ConfigTabs(iKeyLevel).c_str(), strValue.c_str());
-      break;
+      strPrint << JSON_ConfigTabs(iKeyLevel).c_str() << strArray.c_str();
+    } break;
+      
+    case CVT_BLOCK: {
+      JSON_String strBlock;
+      cv_cbValue->Print(strBlock, iLevel);
+      
+      strPrint << JSON_ConfigTabs(iKeyLevel).c_str() << strBlock.c_str();
+    } break;
     
-    default: strValue = "<error type>";
+    default: strPrint << JSON_ConfigTabs(iKeyLevel).c_str() << "<error type>";
   }
+  
+  strValue = strPrint.str();
 };

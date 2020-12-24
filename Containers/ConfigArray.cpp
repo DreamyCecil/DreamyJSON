@@ -96,19 +96,29 @@ int CConfigArray::AddValue(CConfigValue *cvValue) {
 
 // Print the array
 void CConfigArray::Print(JSON_String &strPrint, const int &iLevel) {
-  strPrint = "[]";
+  JSON_StringStream strReturn;
   
   if (ca_acvValues.Count() > 0) {
-    strPrint = "[\n";
+    // array opening
+    strReturn << "[\n";
 
+    // print each value
     for (int i = 0; i < ca_acvValues.Count(); i++) {
       CConfigValue *cv = ca_acvValues[i];
       
       JSON_String strValue = "";
       cv->PrintValue(strValue, iLevel+1, false);
       
-      strPrint = JSON_ConfigPrintF("%s%s,\n", strPrint.c_str(), strValue.c_str());
+      strReturn << strValue.c_str() << ",\n";
     }
-    strPrint = JSON_ConfigPrintF("%s%s]", strPrint.c_str(), JSON_ConfigTabs(iLevel).c_str());
+    
+    // array closing
+    strReturn << JSON_ConfigTabs(iLevel).c_str() << "]";
+    
+  } else {
+    // empty array
+    strReturn << "[]";
   }
+  
+  strPrint = strReturn.str();
 };

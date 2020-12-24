@@ -38,10 +38,14 @@ void JSON_Throw(const char *strFormat, const JSONERROR &eCode, ...) {
 
 // Print out formatted string
 void JSON_Print(const char *strFormat, ...) {
+  const int ctBufferSize = 256;
+  char strBuffer[ctBufferSize+1];
+
   va_list arg;
   va_start(arg, strFormat);
+  _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
 
-  JSON_String strOut = JSON_VPrintF(strFormat, arg);
+  JSON_String strOut = strBuffer;
   
   // no output function
   if (_pJSON_PrintFunction == NULL) {

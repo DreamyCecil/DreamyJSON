@@ -30,54 +30,15 @@ char *JSON_ResizeString(void *pMem, int ctSize) {
   return pNew;
 };
 
-// Format a config string
-JSON_String JSON_ConfigPrintF(const char *strFormat, ...) {
-  va_list arg;
-  va_start(arg, strFormat);
-
-  return JSON_VPrintF(strFormat, arg);
-};
-
-// Format some string using a list of arguments
-JSON_String JSON_VPrintF(const char *strFormat, va_list arg) {
-  static int _ctBufferSize = 0;
-  static char *_pchBuffer = NULL;
-
-  // allocate if buffer wasn't allocated yet
-  if (_ctBufferSize == 0) {
-    _ctBufferSize = 256;
-    _pchBuffer = new char[_ctBufferSize];
-  }
-
-  // repeat
-  int iLen;
-  while (true) {
-    // print to the buffer
-    iLen = _vsnprintf(_pchBuffer, _ctBufferSize, strFormat, arg);
-
-    // stop if printed ok
-    if (iLen != -1) {
-      break;
-    }
-
-    // increase the buffer size
-    _ctBufferSize += 256;
-    _pchBuffer = JSON_ResizeString(_pchBuffer, _ctBufferSize);
-  }
-
-  JSON_String strPrint = _pchBuffer;
-  return strPrint;
-};
-
 // Config text tabs
 JSON_String JSON_ConfigTabs(int iLevel) {
-  JSON_String str = "";
+  JSON_StringStream strTabs;
   
   if (iLevel > 0) {
     for (int i = 0; i < iLevel; i++) {
-      str = JSON_ConfigPrintF("%s  ", str.c_str());
+      strTabs << "  ";
     }
   }
   
-  return str;
+  return strTabs.str();
 };

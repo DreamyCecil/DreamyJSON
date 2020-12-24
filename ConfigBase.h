@@ -21,11 +21,13 @@ SOFTWARE. */
 #pragma once
 
 #include <string>
+#include <sstream>
 #include <fstream>
 #include <stdarg.h>
 
 // Use standard string
 typedef std::string JSON_String;
+typedef std::ostringstream JSON_StringStream;
 
 // For importing
 #ifndef DJSON_API

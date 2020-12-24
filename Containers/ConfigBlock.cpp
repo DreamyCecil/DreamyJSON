@@ -61,25 +61,34 @@ void CConfigBlock::Clear(void) {
 
 // Print the block
 void CConfigBlock::Print(JSON_String &strPrint, const int &iLevel) {
-  strPrint = "{}";
+  JSON_StringStream strReturn;
   
   if (cb_mapValues.Count() > 0) {
-    strPrint = "{\n";
+    // block opening
+    strReturn << "{\n";
 
     for (int i = 0; i < cb_mapValues.Count(); i++) {
       // add the key
       JSON_String strName = cb_mapValues.GetKey(i);
       CConfigValue *cv = cb_mapValues.GetValue(i);
-      strPrint = JSON_ConfigPrintF("%s%s\"%s\" : ", strPrint.c_str(), JSON_ConfigTabs(iLevel+1).c_str(), strName.c_str());
+      strReturn << JSON_ConfigTabs(iLevel+1).c_str() << "\"" << strName.c_str() << "\" : ";
       
       // add the value
       JSON_String strValue = "";
       cv->PrintValue(strValue, iLevel+1, true);
       
-      strPrint = JSON_ConfigPrintF("%s%s,\n", strPrint.c_str(), strValue.c_str());
+      strReturn << strValue.c_str() << ",\n";
     }
-    strPrint = JSON_ConfigPrintF("%s%s}", strPrint.c_str(), JSON_ConfigTabs(iLevel).c_str());
+    
+    // block closing
+    strReturn << JSON_ConfigTabs(iLevel).c_str() << "}";
+    
+  } else {
+    // empty block
+    strReturn << "{}";
   }
+  
+  strPrint = strReturn.str();
 };
 
 // Add values

@@ -22,10 +22,5 @@ SOFTWARE. */
 
 #include "../ConfigBase.h"
 
-// Format a config string
-DJSON_API JSON_String JSON_ConfigPrintF(const char *strFormat, ...);
-// Format some string using a list of arguments
-DJSON_API JSON_String JSON_VPrintF(const char *strFormat, va_list arg);
-
 // Config text tabs
 DJSON_API JSON_String JSON_ConfigTabs(int iLevel);
