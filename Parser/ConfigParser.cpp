@@ -29,7 +29,7 @@ static int _iToken = 0; // Current token
 static int _ctTokens = 0; // Amount of tokens
 
 // Config parser
-JSONERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
+JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
   _aptTokens.Clear();
   
   JSON_String strConfig = "";
@@ -92,7 +92,7 @@ JSONERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
             
           // invalid symbol
           } else {
-            JSON_Throw("Unexpected character '%c' on line %d", JSONERROR::CHAR, iChar, iLine);
+            JSON_Throw("Unexpected character '%c' on line %d", DJSON_CHAR, iChar, iLine);
           }
           break;
           
@@ -129,7 +129,7 @@ JSONERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
           
           // couldn't find the closing quote
           } else {
-            JSON_Throw("Unclosed string on line %d", JSONERROR::STRING, iLine);
+            JSON_Throw("Unclosed string on line %d", DJSON_STRING, iLine);
           }
         } break;
         
@@ -210,12 +210,12 @@ JSONERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
               AddToken(EPT_NULL, iLine, 0);
               
             } else {
-              JSON_Throw("Unknown constant '%s' on line %d", JSONERROR::CONST, strName.c_str(), iLine);
+              JSON_Throw("Unknown constant '%s' on line %d", DJSON_CONST, strName.c_str(), iLine);
             }
           
           // unknown characters
           } else {
-            JSON_Throw("Unexpected character '%c' on line %d", JSONERROR::CHAR, iChar, iLine);
+            JSON_Throw("Unexpected character '%c' on line %d", DJSON_CHAR, iChar, iLine);
           }
       }
     }
@@ -233,7 +233,7 @@ JSONERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
   // no tokens
   if (_ctTokens <= 0) {
     JSON_Print("Cannot parse the config: JSON config is empty!\n");
-    return JSONERROR::EMPTY;
+    return DJSON_EMPTY;
   }
   
   CParserToken &pt = _aptTokens[_iToken++];
@@ -251,11 +251,11 @@ JSONERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
     JSON_Print("Cannot parse the config \"%s\" (Invalid token on line %d)\n", strConfigFile, iFailed);
     
     cbConfig.Clear();
-    return JSONERROR::TOKEN;
+    return DJSON_TOKEN;
   }
   
   // parsed successfully
-  return JSONERROR::OK;
+  return DJSON_OK;
 };
 
 // Array parser

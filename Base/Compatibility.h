@@ -25,11 +25,14 @@ SOFTWARE. */
 // JSON exception
 struct JSON_Exception {
   char *strError;
-  JSONERROR eCode;
+  JSON_ERROR eCode;
+
+  // Constructor
+  JSON_Exception(char *str, JSON_ERROR e) : strError(str), eCode(e) {};
 };
 
 // Throw formatted exception
-DJSON_API void JSON_Throw(const char *strFormat, const JSONERROR &eCode, ...);
+DJSON_API void JSON_Throw(const char *strFormat, const JSON_ERROR &eCode, ...);
 // Print out formatted string
 DJSON_API void JSON_Print(const char *strFormat, ...);
 

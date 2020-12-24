@@ -38,15 +38,15 @@ typedef std::ostringstream JSON_StringStream;
 #include "DreamyStructures/DataStructures.h"
 
 // Error codes
-enum JSONERROR {
-  OK = 0, // no error
+enum JSON_ERROR {
+  DJSON_OK = 0, // no error
   
-  LOAD   = 1, // couldn't load
-  CHAR   = 2, // unexpected character
-  STRING = 3, // unclosed string
-  CONST  = 4, // unknown constant
-  EMPTY  = 5, // no tokens
-  TOKEN  = 6, // invalid token
+  DJSON_LOAD   = 1, // couldn't load
+  DJSON_CHAR   = 2, // unexpected character
+  DJSON_STRING = 3, // unclosed string
+  DJSON_CONST  = 4, // unknown constant
+  DJSON_EMPTY  = 5, // no tokens
+  DJSON_TOKEN  = 6, // invalid token
 };
 
 #include "Base/Formatting.h"

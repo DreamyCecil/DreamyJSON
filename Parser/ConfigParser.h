@@ -26,7 +26,7 @@ SOFTWARE. */
 #include "ParserToken.h"
 
 // Parse JSON config
-DJSON_API JSONERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig);
+DJSON_API JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig);
 
 // Parse config elements
 DJSON_API int ParseArray(CConfigArray *caArray);

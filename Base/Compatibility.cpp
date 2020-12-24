@@ -25,7 +25,7 @@ extern void (*_pJSON_PrintFunction)(const char *) = NULL;
 extern JSON_String (*_pJSON_LoadConfigFile)(JSON_String) = NULL;
 
 // Throw formatted exception
-void JSON_Throw(const char *strFormat, const JSONERROR &eCode, ...) {
+void JSON_Throw(const char *strFormat, const JSON_ERROR &eCode, ...) {
   const int ctBufferSize = 256;
   char strBuffer[ctBufferSize+1];
 
@@ -33,7 +33,7 @@ void JSON_Throw(const char *strFormat, const JSONERROR &eCode, ...) {
   va_start(arg, eCode);
   _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
 
-  throw JSON_Exception{strBuffer, eCode};
+  throw JSON_Exception(strBuffer, eCode);
 };
 
 // Print out formatted string
@@ -69,13 +69,13 @@ JSON_String JSON_LoadConfigFile(JSON_String strConfigFile) {
   strm.open(strConfigFile.c_str());
 
   if (!strm) {
-    JSON_Throw("Cannot open config file '%s'", JSONERROR::LOAD, strConfigFile.c_str());
+    JSON_Throw("Cannot open config file '%s'", DJSON_LOAD, strConfigFile.c_str());
   }
 
   // read until the end
   while (!strm.eof()) {
     JSON_String strLine = "";
-    getline(strm, strLine);
+    std::getline(strm, strLine);
 
     // save each line into the config string
     strConfig += strLine+"\n";
