@@ -20,23 +20,19 @@ SOFTWARE. */
 
 #include "ConfigParser.h"
 
-#ifdef DREAMY_JSON_GC
-  extern CDList<CConfigElement *> _aConfigGarbage = CDList<CConfigElement *>();
-#endif
-
 static CDList<CParserToken> _aptTokens; // Config tokens
 static int _iToken = 0; // Current token
 static int _ctTokens = 0; // Amount of tokens
 
 // Config parser
-JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
+DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
   _aptTokens.Clear();
   
-  JSON_String strConfig = "";
+  DJSON_String strConfig = "";
 
   try {
     // try to load the file
-    strConfig = JSON_LoadConfigFile(strConfigFile);
+    strConfig = DJSON_LoadConfigFile(strConfigFile);
   
     int ctLen = strlen(strConfig.c_str());
     int iPos = 0;
@@ -92,7 +88,7 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
             
           // invalid symbol
           } else {
-            JSON_Throw("Unexpected character '%c' on line %d", DJSON_CHAR, iChar, iLine);
+            DJSON_Throw(DJSON_CHAR, "Unexpected character '%c' on line %d", iChar, iLine);
           }
           break;
           
@@ -124,12 +120,12 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
           if (iPos < ctLen) {
             iPos++;
             
-            JSON_String strString = strConfig.substr(iStart+1, iPos - iStart - 2);
+            DJSON_String strString = strConfig.substr(iStart+1, iPos - iStart - 2);
             AddToken(EPT_STRING, iLine, strString);
           
           // couldn't find the closing quote
           } else {
-            JSON_Throw("Unclosed string on line %d", DJSON_STRING, iLine);
+            DJSON_Throw(DJSON_STRING, "Unclosed string on line %d", iLine);
           }
         } break;
         
@@ -170,7 +166,7 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
             }
             
             // save the number
-            JSON_String strString = strConfig.substr(iStart, iPos - iStart);
+            DJSON_String strString = strConfig.substr(iStart, iPos - iStart);
             float fValue = 0.0f;
             sscanf(strString.c_str(), "%f", &fValue);
             
@@ -198,7 +194,7 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
             }
             
             // copy the name
-            JSON_String strName = strConfig.substr(iStart, iPos - iStart);
+            DJSON_String strName = strConfig.substr(iStart, iPos - iStart);
             
             if (strName == "true") {
               AddToken(EPT_INDEX, iLine, 1);
@@ -210,19 +206,19 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
               AddToken(EPT_NULL, iLine, 0);
               
             } else {
-              JSON_Throw("Unknown constant '%s' on line %d", DJSON_CONST, strName.c_str(), iLine);
+              DJSON_Throw(DJSON_CONST, "Unknown constant '%s' on line %d", strName.c_str(), iLine);
             }
           
           // unknown characters
           } else {
-            JSON_Throw("Unexpected character '%c' on line %d", DJSON_CHAR, iChar, iLine);
+            DJSON_Throw(DJSON_CHAR, "Unexpected character '%c' on line %d", iChar, iLine);
           }
       }
     }
     
   // parsing failed
-  } catch (JSON_Exception exError) {
-    JSON_Error("%s\n", exError.strError);
+  } catch (DJSON_Exception exError) {
+    DJSON_Error("%s\n", exError.strError);
     return exError.eCode;
   }
   
@@ -232,7 +228,7 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
 
   // no tokens
   if (_ctTokens <= 0) {
-    JSON_Error("Cannot parse the config: JSON config is empty!\n");
+    DJSON_Error("Cannot parse the config: JSON config is empty!\n");
     return DJSON_EMPTY;
   }
   
@@ -244,13 +240,13 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
     iFailed = pt.pt_iLine;
     
   } else {
-    iFailed = ParseBlock(&cbConfig);
+    iFailed = ParseBlock(mapConfig);
   }
   
   if (iFailed > 0) {
-    JSON_Error("Cannot parse the config \"%s\" (Invalid token on line %d)\n", strConfigFile, iFailed);
+    DJSON_Error("Cannot parse the config \"%s\" (Invalid token on line %d)\n", strConfigFile, iFailed);
     
-    cbConfig.Clear();
+    mapConfig.Clear();
     return DJSON_TOKEN;
   }
   
@@ -259,7 +255,7 @@ JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig) {
 };
 
 // Array parser
-int ParseArray(CConfigArray *caArray)
+int ParseArray(DJSON_Array &aArray)
 {
   while (_iToken < _ctTokens) {
     CParserToken &pt = _aptTokens[_iToken];
@@ -270,14 +266,14 @@ int ParseArray(CConfigArray *caArray)
       return 0;
     }
     
-    CConfigValue *cvValue = new CConfigValue();
+    CConfigValue cvValue;
     int iFailed = ParseValue(cvValue);
   
     if (iFailed > 0) {
       return iFailed;
     }
     
-    caArray->AddValue(cvValue);
+    aArray.Add(cvValue);
   
     // next value
     CParserToken &ptComma = _aptTokens[_iToken++];
@@ -296,7 +292,7 @@ int ParseArray(CConfigArray *caArray)
 };
 
 // Block parser
-int ParseBlock(CConfigBlock *cbConfig)
+int ParseBlock(DJSON_Block &mapConfig)
 {
   while (_iToken < _ctTokens) {
     CParserToken &pt = _aptTokens[_iToken];
@@ -307,7 +303,7 @@ int ParseBlock(CConfigBlock *cbConfig)
       return 0;
     }
     
-    int iFailed = ParseKey(cbConfig);
+    int iFailed = ParseKey(mapConfig);
     
     if (iFailed > 0) {
       return iFailed;
@@ -318,7 +314,7 @@ int ParseBlock(CConfigBlock *cbConfig)
 };
 
 // Key parser
-int ParseKey(CConfigBlock *cbConfig)
+int ParseKey(DJSON_Block &mapConfig)
 {
   CParserToken &ptName = _aptTokens[_iToken++];
   
@@ -332,14 +328,14 @@ int ParseKey(CConfigBlock *cbConfig)
     return ptColon.pt_iLine;
   }
   
-  CConfigValue *cvValue = new CConfigValue();
+  CConfigValue cvValue;
   int iFailed = ParseValue(cvValue);
   
   if (iFailed > 0) {
     return iFailed;
   }
   
-  cbConfig->AddValue(ptName.pt_strValue, cvValue);
+  mapConfig.Add(ptName.pt_strValue, cvValue);
   
   // next key
   CParserToken &ptComma = _aptTokens[_iToken++];
@@ -353,57 +349,55 @@ int ParseKey(CConfigBlock *cbConfig)
 };
 
 // Value parser
-int ParseValue(CConfigValue *cvValue)
+int ParseValue(CConfigValue &cvValue)
 {
   CParserToken &ptValue = _aptTokens[_iToken++];
       
   switch (ptValue.pt_eTokenType) {
     // null value
     case EPT_NULL:
-      cvValue->SetNull();
+      cvValue.SetNull();
       break;
 
     // index value
     case EPT_INDEX:
-      cvValue->SetValue((int)ptValue.pt_fValue);
+      cvValue.SetValue((int)ptValue.pt_fValue);
       break;
       
     // float value
     case EPT_FLOAT:
-      cvValue->SetValue(ptValue.pt_fValue);
+      cvValue.SetValue(ptValue.pt_fValue);
       break;
     
     // string value
     case EPT_STRING:
-      cvValue->SetValue(ptValue.pt_strValue);
+      cvValue.SetValue(ptValue.pt_strValue);
       break;
     
     // array of values
     case EPT_OPEN_S: {
-      CConfigArray *caValue = new CConfigArray();
-      int iFailed = ParseArray(caValue);
+      DJSON_Array aArray;
+      int iFailed = ParseArray(aArray);
       
-      // couldn't read the block
+      // couldn't read the array
       if (iFailed > 0) {
-        delete caValue;
         return iFailed;
       }
       
-      cvValue->SetValue(caValue);
+      cvValue.SetValue(aArray);
     } break;
     
     // block of values
     case EPT_OPEN_C: {
-      CConfigBlock *cbValue = new CConfigBlock();
-      int iFailed = ParseBlock(cbValue);
+      DJSON_Block mapBlock;
+      int iFailed = ParseBlock(mapBlock);
       
       // couldn't read the block
       if (iFailed > 0) {
-        delete cbValue;
         return iFailed;
       }
       
-      cvValue->SetValue(cbValue);
+      cvValue.SetValue(mapBlock);
     } break;
       
     default: return ptValue.pt_iLine;
@@ -421,6 +415,6 @@ void AddToken(const EParserToken &eType, const int &iLine, const float &fValue) 
   _aptTokens.Add(CParserToken(eType, iLine, fValue));
 };
 
-void AddToken(const EParserToken &eType, const int &iLine, const JSON_String &strValue) {
+void AddToken(const EParserToken &eType, const int &iLine, const DJSON_String &strValue) {
   _aptTokens.Add(CParserToken(eType, iLine, strValue));
 };

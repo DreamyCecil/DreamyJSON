@@ -20,30 +20,20 @@ SOFTWARE. */
 
 #pragma once
 
-#include "ConfigBase.h"
-
-// JSON garbage collector (for debugging purposes)
-//#define DREAMY_JSON_GC
+#include "../ConfigBase.h"
   
 // Config Element Base
 class DJSON_API CConfigElement {
   protected:
-    int ce_iGCIndex;
-    
-    enum EConfigElementType {
-      CET_VALUE = 0,
-      CET_BLOCK = 1,
-      CET_ARRAY = 2,
-    } ce_eElementType;
-    
-    CConfigElement(const EConfigElementType eType) : ce_iGCIndex(0), ce_eElementType(eType) {};
+    // Constructor
+    CConfigElement(void) {};
 };
 
-#ifdef DREAMY_JSON_GC
-  extern CDList<CConfigElement *> _aConfigGarbage;
-#endif
+// Define value types
+typedef CDList<class CConfigValue> DJSON_Array;
+typedef CDMap<DJSON_String, class CConfigValue> DJSON_Block;
 
-// Predefine the elements
-class CConfigArray;
-class CConfigBlock;
-class CConfigValue;
+// Print the array
+void DJSON_PrintArray(DJSON_Array &aArray, DJSON_String &strPrint, const int &iLevel);
+// Print the block
+void DJSON_PrintBlock(DJSON_Block &mapBlock, DJSON_String &strPrint, const int &iLevel);

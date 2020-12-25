@@ -20,21 +20,22 @@ SOFTWARE. */
 
 #pragma once
 
-#include "../ConfigElement.h"
-#include "../Containers/ConfigArray.h"
-#include "../Containers/ConfigBlock.h"
+#include "../Values/ConfigValue.h"
 #include "ParserToken.h"
 
 // Parse JSON config
-DJSON_API JSON_ERROR ParseConfig(const char *strConfigFile, CConfigBlock &cbConfig);
+DJSON_API DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig);
 
-// Parse config elements
-DJSON_API int ParseArray(CConfigArray *caArray);
-DJSON_API int ParseBlock(CConfigBlock *cbConfig);
-DJSON_API int ParseKey(CConfigBlock *cbConfig);
-DJSON_API int ParseValue(CConfigValue *cvValue);
+// Array parser
+DJSON_API int ParseArray(DJSON_Array &aArray);
+// Block parser
+DJSON_API int ParseBlock(DJSON_Block &mapConfig);
+// Key parser
+DJSON_API int ParseKey(DJSON_Block &mapConfig);
+// Value parser
+DJSON_API int ParseValue(CConfigValue &cvValue);
 
 // Add one token to the list
 DJSON_API void AddToken(const EParserToken &eType, const int &iLine);
 DJSON_API void AddToken(const EParserToken &eType, const int &iLine, const float &fValue);
-DJSON_API void AddToken(const EParserToken &eType, const int &iLine, const JSON_String &strValue);
+DJSON_API void AddToken(const EParserToken &eType, const int &iLine, const DJSON_String &strValue);

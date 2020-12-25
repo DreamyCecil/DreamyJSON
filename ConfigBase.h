@@ -26,8 +26,8 @@ SOFTWARE. */
 #include <stdarg.h>
 
 // Use standard string
-typedef std::string JSON_String;
-typedef std::ostringstream JSON_StringStream;
+typedef std::string DJSON_String;
+typedef std::ostringstream DJSON_StringStream;
 
 // For importing
 #ifndef DJSON_API
@@ -38,7 +38,7 @@ typedef std::ostringstream JSON_StringStream;
 #include "DreamyStructures/DataStructures.h"
 
 // Error codes
-enum JSON_ERROR {
+enum DJSON_ERROR {
   DJSON_OK = 0, // no error
   
   DJSON_LOAD   = 1, // couldn't load

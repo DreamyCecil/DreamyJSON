@@ -21,24 +21,12 @@ SOFTWARE. */
 #include "Compatibility.h"
 
 // Custom functions
-extern void (*_pJSON_PrintFunction)(const char *) = NULL;
-extern void (*_pJSON_ErrorFunction)(const char *) = NULL;
-extern JSON_String (*_pJSON_LoadConfigFile)(JSON_String) = NULL;
+extern void (*DJSON_pPrintFunction)(const char *) = NULL;
+extern void (*DJSON_pErrorFunction)(const char *) = NULL;
+extern DJSON_String (*DJSON_pLoadConfigFile)(DJSON_String) = NULL;
 
 // Throw formatted exception
-void JSON_Throw(const char *strFormat, const JSON_ERROR &eCode, ...) {
-  const int ctBufferSize = 256;
-  char strBuffer[ctBufferSize+1];
-
-  va_list arg;
-  va_start(arg, eCode);
-  _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
-
-  throw JSON_Exception(strBuffer, eCode);
-};
-
-// Print out formatted string
-void JSON_Print(const char *strFormat, ...) {
+void DJSON_Throw(const DJSON_ERROR &eCode, const char *strFormat, ...) {
   const int ctBufferSize = 256;
   char strBuffer[ctBufferSize+1];
 
@@ -46,19 +34,31 @@ void JSON_Print(const char *strFormat, ...) {
   va_start(arg, strFormat);
   _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
 
-  JSON_String strOut = strBuffer;
+  throw DJSON_Exception(strBuffer, eCode);
+};
+
+// Print out formatted string
+void DJSON_Print(const char *strFormat, ...) {
+  const int ctBufferSize = 256;
+  char strBuffer[ctBufferSize+1];
+
+  va_list arg;
+  va_start(arg, strFormat);
+  _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
+
+  DJSON_String strOut = strBuffer;
   
   // no output function
-  if (_pJSON_PrintFunction == NULL) {
+  if (DJSON_pPrintFunction == NULL) {
     printf(strOut.c_str());
     return;
   }
   
-  _pJSON_PrintFunction(strOut.c_str());
+  DJSON_pPrintFunction(strOut.c_str());
 };
 
 // Print out an error
-void JSON_Error(const char *strFormat, ...) {
+void DJSON_Error(const char *strFormat, ...) {
   const int ctBufferSize = 256;
   char strBuffer[ctBufferSize+1];
 
@@ -66,42 +66,42 @@ void JSON_Error(const char *strFormat, ...) {
   va_start(arg, strFormat);
   _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
 
-  JSON_String strOut = strBuffer;
+  DJSON_String strOut = strBuffer;
   
   // check the error function
-  if (_pJSON_ErrorFunction == NULL) {
+  if (DJSON_pErrorFunction == NULL) {
     // check the print function
-    if (_pJSON_PrintFunction == NULL) {
+    if (DJSON_pPrintFunction == NULL) {
       printf(strOut.c_str());
       return;
     }
     
-    _pJSON_PrintFunction(strOut.c_str());
+    DJSON_pPrintFunction(strOut.c_str());
     return;
   }
   
-  _pJSON_ErrorFunction(strOut.c_str());
+  DJSON_pErrorFunction(strOut.c_str());
 };
 
 // Load the config file
-JSON_String JSON_LoadConfigFile(JSON_String strConfigFile) {
+DJSON_String DJSON_LoadConfigFile(DJSON_String strConfigFile) {
   // custom loading function
-  if (_pJSON_LoadConfigFile != NULL) {
-    return _pJSON_LoadConfigFile(strConfigFile);
+  if (DJSON_pLoadConfigFile != NULL) {
+    return DJSON_pLoadConfigFile(strConfigFile);
   }
     
-  JSON_String strConfig = "";
+  DJSON_String strConfig = "";
 
   std::ifstream strm;
   strm.open(strConfigFile.c_str());
 
   if (!strm) {
-    JSON_Throw("Cannot open config file '%s'", DJSON_LOAD, strConfigFile.c_str());
+    DJSON_Throw(DJSON_LOAD, "Cannot open config file '%s'", strConfigFile.c_str());
   }
 
   // read until the end
   while (!strm.eof()) {
-    JSON_String strLine = "";
+    DJSON_String strLine = "";
     std::getline(strm, strLine);
 
     // save each line into the config string

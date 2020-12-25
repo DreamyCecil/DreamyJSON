@@ -20,9 +20,7 @@ SOFTWARE. */
 
 #pragma once
 
-#include "../ConfigElement.h"
-#include "../Containers/ConfigArray.h"
-#include "../Containers/ConfigBlock.h"
+#include "../Values/ConfigElement.h"
 
 // Value Types
 enum EConfigValueType {
@@ -43,34 +41,37 @@ class DJSON_API CConfigValue : CConfigElement {
   public:
     EConfigValueType cv_eType;
     
+    // Values
     union {
       int cv_iValue; // index value
       float cv_fValue; // float value
       char cv_strValue[256]; // string value
-      CConfigArray *cv_caValue; // array of values
-      CConfigBlock *cv_cbValue; // block of values
     };
+
+    // Containers
+    DJSON_Array cv_aArray; // array of values
+    DJSON_Block cv_mapBlock; // block of values
     
     // Constructors
     CConfigValue(void);
     CConfigValue(const int &iValue);
     CConfigValue(const float &fValue);
-    CConfigValue(const JSON_String &strValue);
-    CConfigValue(CConfigArray *caValue);
-    CConfigValue(CConfigBlock *cbValue);
+    CConfigValue(const DJSON_String &strValue);
+    CConfigValue(const DJSON_Array &aArray);
+    CConfigValue(const DJSON_Block &mapBlock);
     
     // Set new value
     void SetNull(void);
     void SetValue(const int &iValue);
     void SetValue(const float &fValue);
-    void SetValue(const JSON_String &strValue);
-    void SetValue(CConfigArray *caValue);
-    void SetValue(CConfigBlock *cbValue);
+    void SetValue(const DJSON_String &strValue);
+    void SetValue(const DJSON_Array &aArray);
+    void SetValue(const DJSON_Block &mapBlock);
     
     // Destructor
     ~CConfigValue(void);
     void Clear(void);
     
     // Print the value
-    void PrintValue(JSON_String &strValue, const int &iLevel, bool bHasKey);
+    void PrintValue(DJSON_String &strValue, const int &iLevel, bool bHasKey);
 };

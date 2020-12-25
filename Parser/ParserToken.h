@@ -63,7 +63,7 @@ class DJSON_API CParserToken {
     CParserToken(const int &iType, const int &iLine, const float &f) :
       pt_eTokenType(iType), pt_iLine(iLine), pt_fValue(f) {};
       
-    CParserToken(const int &iType, const int &iLine, const JSON_String &str) :
+    CParserToken(const int &iType, const int &iLine, const DJSON_String &str) :
       pt_eTokenType(iType), pt_iLine(iLine)
     {
       strcpy(pt_strValue, str.c_str());

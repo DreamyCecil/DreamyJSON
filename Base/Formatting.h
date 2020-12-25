@@ -23,4 +23,4 @@ SOFTWARE. */
 #include "../ConfigBase.h"
 
 // Config text tabs
-DJSON_API JSON_String JSON_ConfigTabs(int iLevel);
+DJSON_API DJSON_String DJSON_ConfigTabs(int iLevel);

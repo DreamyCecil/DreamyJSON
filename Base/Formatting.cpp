@@ -31,8 +31,8 @@ char *JSON_ResizeString(void *pMem, int ctSize) {
 };
 
 // Config text tabs
-JSON_String JSON_ConfigTabs(int iLevel) {
-  JSON_StringStream strTabs;
+DJSON_String DJSON_ConfigTabs(int iLevel) {
+  DJSON_StringStream strTabs;
   
   if (iLevel > 0) {
     for (int i = 0; i < iLevel; i++) {

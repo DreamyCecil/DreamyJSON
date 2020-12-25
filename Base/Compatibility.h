@@ -23,20 +23,20 @@ SOFTWARE. */
 #include "../ConfigBase.h"
 
 // JSON exception
-struct JSON_Exception {
+struct DJSON_Exception {
   char *strError;
-  JSON_ERROR eCode;
+  DJSON_ERROR eCode;
 
   // Constructor
-  JSON_Exception(char *str, JSON_ERROR e) : strError(str), eCode(e) {};
+  DJSON_Exception(char *str, DJSON_ERROR e) : strError(str), eCode(e) {};
 };
 
 // Throw formatted exception
-DJSON_API void JSON_Throw(const char *strFormat, const JSON_ERROR &eCode, ...);
+DJSON_API void DJSON_Throw(const DJSON_ERROR &eCode, const char *strFormat, ...);
 // Print out formatted string
-DJSON_API void JSON_Print(const char *strFormat, ...);
+DJSON_API void DJSON_Print(const char *strFormat, ...);
 // Print out an error
-DJSON_API void JSON_Error(const char *strFormat, ...);
+DJSON_API void DJSON_Error(const char *strFormat, ...);
 
 // Load the config file
-DJSON_API JSON_String JSON_LoadConfigFile(JSON_String strConfigFile);
+DJSON_API DJSON_String DJSON_LoadConfigFile(DJSON_String strConfigFile);

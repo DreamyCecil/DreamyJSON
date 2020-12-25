@@ -24,8 +24,11 @@ SOFTWARE. */
 #include <iostream>
 
 // Compatibility
-extern void (*_pJSON_PrintFunction)(const char *);
-extern JSON_String (*_pJSON_LoadConfigFile)(JSON_String);
+extern void (*DJSON_pPrintFunction)(const char *);
+extern DJSON_String (*DJSON_pLoadConfigFile)(DJSON_String);
+
+// String type
+typedef DJSON_String string;
 
 // Custom print function
 void CustomPrint(const char *strOut) {
@@ -34,18 +37,44 @@ void CustomPrint(const char *strOut) {
 
 int main() {
   // Hook print function
-  _pJSON_PrintFunction = (void (*)(const char *))CustomPrint;
+  DJSON_pPrintFunction = (void (*)(const char *))CustomPrint;
 
-  CConfigBlock cbConfig;
+  DJSON_Block mapConfig;
   const char *strFile = "Test.json";
 
   // Try to parse the file
-  if (ParseConfig(strFile, cbConfig) == DJSON_OK) {
-    // Print out the loaded config
-    JSON_String strConfig;
-    cbConfig.Print(strConfig);
+  if (ParseConfig(strFile, mapConfig) == DJSON_OK)
+  {
+    // Check for value existence
+    if (mapConfig.FindKeyIndex("Hello") != -1) {
+      mapConfig["Hello"] = string("How are you?");
 
-    std::cout << "JSON file:\n" << strConfig << "\n";
+    } else {
+      CustomPrint("\"Hello\" key does not exist!\n");
+    }
+
+    // Check for some value type
+    if (mapConfig.FindKeyIndex("String") != -1) {
+      CConfigValue &cvString = mapConfig["String"];
+
+      if (cvString.cv_eType == CVT_INDEX) {
+        cvString = 10;
+        CustomPrint("Changed \"String\" to a number!\n");
+
+      } else {
+        cvString = string("New string!");
+        CustomPrint("Changed \"String\" value!\n");
+      }
+
+    } else {
+      CustomPrint("\"String\" key does not exist!\n");
+    }
+
+    // Print out the loaded config
+    string strConfig;
+    DJSON_PrintBlock(mapConfig, strConfig, 0);
+
+    std::cout << "\nJSON file:\n" << strConfig << "\n\n";
   }
 
   return 0;
