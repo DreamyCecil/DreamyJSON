@@ -32,7 +32,7 @@ void DJSON_Throw(const DJSON_ERROR &eCode, const char *strFormat, ...) {
 
   va_list arg;
   va_start(arg, strFormat);
-  _vsnprintf_s(strBuffer, ctBufferSize, strFormat, arg);
+  _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
 
   throw DJSON_Exception(strBuffer, eCode);
 };
@@ -44,7 +44,7 @@ void DJSON_Print(const char *strFormat, ...) {
 
   va_list arg;
   va_start(arg, strFormat);
-  _vsnprintf_s(strBuffer, ctBufferSize, strFormat, arg);
+  _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
 
   DJSON_String strOut = strBuffer;
   
@@ -64,7 +64,7 @@ void DJSON_Error(const char *strFormat, ...) {
 
   va_list arg;
   va_start(arg, strFormat);
-  _vsnprintf_s(strBuffer, ctBufferSize, strFormat, arg);
+  _vsnprintf(strBuffer, ctBufferSize, strFormat, arg);
 
   DJSON_String strOut = strBuffer;
   

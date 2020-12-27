@@ -168,7 +168,7 @@ DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
             // save the number
             DJSON_String strString = strConfig.substr(iStart, iPos - iStart);
             float fValue = 0.0f;
-            sscanf_s(strString.c_str(), "%f", &fValue);
+            sscanf(strString.c_str(), "%f", &fValue);
             
             AddToken((bPreDot ? EPT_INDEX : EPT_FLOAT), iLine, fValue);
           
