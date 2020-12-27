@@ -20,7 +20,7 @@ SOFTWARE. */
 
 #pragma once
 
-#include "../Values/ConfigElement.h"
+#include "ConfigElement.h"
 
 // Value Types
 enum EConfigValueType {
@@ -73,5 +73,5 @@ class DJSON_API CConfigValue : CConfigElement {
     void Clear(void);
     
     // Print the value
-    void PrintValue(DJSON_String &strValue, const int &iLevel, bool bHasKey);
+    void PrintValue(DJSON_String &strValue, const int &iLevel, bool bHasKey = false);
 };

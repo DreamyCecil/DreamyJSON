@@ -39,36 +39,65 @@ int main() {
   // Hook print function
   DJSON_pPrintFunction = (void (*)(const char *))CustomPrint;
 
-  DJSON_Block mapConfig;
+  CConfigBlock mapConfig;
   const char *strFile = "Test.json";
 
   // Try to parse the file
   if (ParseConfig(strFile, mapConfig) == DJSON_OK)
   {
     // Check for value existence
-    if (mapConfig.FindKeyIndex("Hello") != -1) {
+    if (mapConfig.FindKeyIndex("Hello") != -1) { // Also valid: mapConfig.GetValue("Hello", <reference>)
       mapConfig["Hello"] = string("How are you?");
 
     } else {
       CustomPrint("\"Hello\" key does not exist!\n");
     }
 
-    // Check for some value type
-    if (mapConfig.FindKeyIndex("String") != -1) {
+    // Check for integer type and change it
+    int iVal;
+    if (mapConfig.GetValue("String", iVal)) {
       CConfigValue &cvString = mapConfig["String"];
 
-      if (cvString.cv_eType == CVT_INDEX) {
-        cvString = 10;
-        CustomPrint("Changed \"String\" to a number!\n");
-
-      } else {
-        cvString = string("New string!");
-        CustomPrint("Changed \"String\" value!\n");
-      }
+      cvString = 10;
+      CustomPrint("Changed number of a \"String\"!\n");
 
     } else {
-      CustomPrint("\"String\" key does not exist!\n");
+      CustomPrint("\"String\" is not a number!\n");
     }
+    
+    // Check for any type and change it
+    CConfigValue cvVal;
+    if (mapConfig.GetValue("String", cvVal)) {
+      CConfigValue &cvString = mapConfig["String"];
+
+      cvString = string("New string!");
+      CustomPrint("Changed \"String\" value!\n");
+
+    } else {
+      CustomPrint("\"String\" is not a string!\n");
+    }
+
+    // Check for null value
+    CConfigBlock cbPerson;
+    if (mapConfig.GetValue("PERSONAL BLOCK", cbPerson))
+    {
+      // Uncomment to see a different result
+      // cbPerson["spouse"] = string("Jane Doe");
+
+      if (cbPerson.GetNull("spouse")) {
+        CustomPrint("No spouse!\n");
+
+      } else {
+        string strSpouse;
+        cbPerson["spouse"].PrintValue(strSpouse, 0);
+
+        std::cout << "Spouse: " << strSpouse << "\n";
+      }
+    }
+
+    // Directly change the value
+    CConfigValue &cvArrayElement = mapConfig["array"].cv_aArray[2];       // String: "nice"
+    cvArrayElement = string(cvArrayElement.cv_strValue) + string(" one"); // String: "nice one"
 
     // Print out the loaded config
     string strConfig;

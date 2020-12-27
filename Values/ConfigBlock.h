@@ -20,23 +20,29 @@ SOFTWARE. */
 
 #pragma once
 
-#include "../Values/ConfigValue.h"
-#include "../Values/ConfigBlock.h"
-#include "ParserToken.h"
+#include "ConfigValue.h"
 
-// Parse JSON config
-DJSON_API DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig);
+class DJSON_API CConfigBlock : public DJSON_Block {
+  public:
+    // Get value type
+    inline EConfigValueType GetType(DJSON_String strKey) {
+      return operator[](strKey).cv_eType;
+    };
 
-// Array parser
-DJSON_API int ParseArray(DJSON_Array &aArray);
-// Block parser
-DJSON_API int ParseBlock(DJSON_Block &mapConfig);
-// Key parser
-DJSON_API int ParseKey(DJSON_Block &mapConfig);
-// Value parser
-DJSON_API int ParseValue(CConfigValue &cvValue);
+    // Get null value
+    inline bool GetNull(DJSON_String strKey);
 
-// Add one token to the list
-DJSON_API void AddToken(const EParserToken &eType, const int &iLine);
-DJSON_API void AddToken(const EParserToken &eType, const int &iLine, const float &fValue);
-DJSON_API void AddToken(const EParserToken &eType, const int &iLine, const DJSON_String &strValue);
+    // Get integer value
+    bool GetValue(DJSON_String strKey, int &iValue);
+    // Get float value
+    bool GetValue(DJSON_String strKey, float &fValue);
+    // Get string value
+    bool GetValue(DJSON_String strKey, DJSON_String &strValue);
+    // Get array
+    bool GetValue(DJSON_String strKey, DJSON_Array &aArray);
+    // Get block
+    bool GetValue(DJSON_String strKey, DJSON_Block &mapBlock);
+
+    // Get config value
+    bool GetValue(DJSON_String strKey, CConfigValue &cvValue);
+};

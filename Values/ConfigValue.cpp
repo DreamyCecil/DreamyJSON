@@ -63,7 +63,7 @@ void CConfigValue::SetValue(const float &fValue) {
 
 void CConfigValue::SetValue(const DJSON_String &strValue) {
   cv_eType = CVT_STRING;
-  strcpy(cv_strValue, strValue.c_str());
+  strcpy_s(cv_strValue, strValue.c_str());
 };
 
 void CConfigValue::SetValue(const DJSON_Array &aArray) {
