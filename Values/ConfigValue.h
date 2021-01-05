@@ -71,6 +71,9 @@ class DJSON_API CConfigValue : CConfigElement {
     // Destructor
     ~CConfigValue(void);
     void Clear(void);
+
+    // Get number value
+    float GetNumber(void);
     
     // Print the value
     void PrintValue(DJSON_String &strValue, const int &iLevel, bool bHasKey = false);

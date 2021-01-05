@@ -88,6 +88,15 @@ void CConfigValue::Clear(void) {
   }
 };
 
+// Get number value
+float CConfigValue::GetNumber(void) {
+  switch (cv_eType) {
+    case CVT_INDEX: return float(cv_iValue);
+    case CVT_FLOAT: return cv_fValue;
+  }
+  return 0.0f;
+};
+
 // Print the value
 void CConfigValue::PrintValue(DJSON_String &strValue, const int &iLevel, bool bHasKey) {
   const int iKeyLevel = iLevel * !bHasKey;
