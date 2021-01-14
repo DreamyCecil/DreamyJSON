@@ -218,7 +218,7 @@ DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
     
   // parsing failed
   } catch (DJSON_Exception exError) {
-    DJSON_Error("Cannot parse the config \"%s\":\n%s\n", strConfigFile, exError.strError);
+    DJSON_Error("Cannot parse the config \"%s\":\n%s (code: 0x%X)\n", strConfigFile, exError.strError, exError.eCode);
     return exError.eCode;
   }
   
@@ -228,7 +228,7 @@ DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
 
   // no tokens
   if (_ctTokens <= 0) {
-    DJSON_Error("Cannot parse the config \"%s\":\nJSON config is empty!\n", strConfigFile);
+    DJSON_Error("Cannot parse the config \"%s\":\nJSON config is empty! (code: 0x%X)\n", strConfigFile, DJSON_EMPTY);
     return DJSON_EMPTY;
   }
   
@@ -244,7 +244,7 @@ DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
   }
   
   if (iFailed > 0) {
-    DJSON_Error("Cannot parse the config \"%s\":\nInvalid token on line %d\n", strConfigFile, iFailed);
+    DJSON_Error("Cannot parse the config \"%s\":\nInvalid token on line %d (code: 0x%X)\n", strConfigFile, iFailed, DJSON_TOKEN);
     
     mapConfig.Clear();
     return DJSON_TOKEN;

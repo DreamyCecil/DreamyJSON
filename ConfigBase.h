@@ -39,14 +39,14 @@ typedef std::ostringstream DJSON_StringStream;
 
 // Error codes
 enum DJSON_ERROR {
-  DJSON_OK = 0, // no error
+  DJSON_OK = 0x00, // no error
   
-  DJSON_LOAD   = 1, // couldn't load
-  DJSON_CHAR   = 2, // unexpected character
-  DJSON_STRING = 3, // unclosed string
-  DJSON_CONST  = 4, // unknown constant
-  DJSON_EMPTY  = 5, // no tokens
-  DJSON_TOKEN  = 6, // invalid token
+  DJSON_LOAD   = 0x01, // couldn't load
+  DJSON_CHAR   = 0x02, // unexpected character
+  DJSON_STRING = 0x03, // unclosed string
+  DJSON_CONST  = 0x04, // unknown constant
+  DJSON_EMPTY  = 0x05, // no tokens
+  DJSON_TOKEN  = 0x06, // invalid token
 };
 
 #include "Base/Formatting.h"
