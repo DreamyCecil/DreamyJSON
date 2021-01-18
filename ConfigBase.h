@@ -34,8 +34,10 @@ typedef std::ostringstream DJSON_StringStream;
 #define DJSON_API _declspec(dllexport)
 #endif
 
-// Dependencies
+// Include structures if needed
+#ifndef DJSON_EXCLUDE_DSTRUCT
 #include "DreamyStructures/DataStructures.h"
+#endif
 
 // Error codes
 enum DJSON_ERROR {
