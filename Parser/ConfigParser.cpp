@@ -1,4 +1,4 @@
-/* Copyright (c) 2020 Dreamy Cecil
+/* Copyright (c) 2020-2021 Dreamy Cecil
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ static int _iToken = 0; // Current token
 static int _ctTokens = 0; // Amount of tokens
 
 // Config parser
-DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
+DJSON_ERROR ParseConfigTokens(const char *strConfigFile) {
   _aptTokens.Clear();
   
   DJSON_String strConfig = "";
@@ -221,8 +221,8 @@ DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
     DJSON_Error("Cannot parse the config \"%s\":\n%s (code: 0x%X)\n", strConfigFile, exError.strError, exError.eCode);
     return exError.eCode;
   }
-  
-  // fill the config block
+
+  // reset tokens
   _iToken = 0;
   _ctTokens = _aptTokens.Count();
 
@@ -231,7 +231,21 @@ DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
     DJSON_Error("Cannot parse the config \"%s\":\nJSON config is empty! (code: 0x%X)\n", strConfigFile, DJSON_EMPTY);
     return DJSON_EMPTY;
   }
+
+  // parsed successfully
+  return DJSON_OK;
+};
   
+// Parse JSON block
+DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
+  // couldn't parse tokens
+  DJSON_ERROR eParseError = ParseConfigTokens(strConfigFile);
+
+  if (eParseError != DJSON_OK) {
+    return eParseError;
+  }
+  
+  // fill the config block
   CParserToken &pt = _aptTokens[_iToken++];
   int iFailed = 0;
   
@@ -244,9 +258,41 @@ DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig) {
   }
   
   if (iFailed > 0) {
-    DJSON_Error("Cannot parse the config \"%s\":\nInvalid token on line %d (code: 0x%X)\n", strConfigFile, iFailed, DJSON_TOKEN);
+    DJSON_Error("Cannot parse the config block \"%s\":\nInvalid token on line %d (code: 0x%X)\n", strConfigFile, iFailed, DJSON_TOKEN);
     
     mapConfig.Clear();
+    return DJSON_TOKEN;
+  }
+  
+  // parsed successfully
+  return DJSON_OK;
+};
+
+// Parse JSON array
+DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Array &aConfig) {
+  // couldn't parse tokens
+  DJSON_ERROR eParseError = ParseConfigTokens(strConfigFile);
+
+  if (eParseError != DJSON_OK) {
+    return eParseError;
+  }
+  
+  // fill the config array
+  CParserToken &pt = _aptTokens[_iToken++];
+  int iFailed = 0;
+  
+  // check for an opening bracket
+  if (pt.pt_eTokenType != EPT_OPEN_S) {
+    iFailed = pt.pt_iLine;
+    
+  } else {
+    iFailed = ParseArray(aConfig);
+  }
+  
+  if (iFailed > 0) {
+    DJSON_Error("Cannot parse the config array \"%s\":\nInvalid token on line %d (code: 0x%X)\n", strConfigFile, iFailed, DJSON_TOKEN);
+    
+    aConfig.Clear();
     return DJSON_TOKEN;
   }
   

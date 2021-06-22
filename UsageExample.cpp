@@ -1,4 +1,4 @@
-/* Copyright (c) 2020 Dreamy Cecil
+/* Copyright (c) 2020-2021 Dreamy Cecil
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,15 +39,28 @@ int main() {
   // Hook print function
   DJSON_pPrintFunction = (void (*)(const char *))CustomPrint;
 
-  CConfigBlock mapConfig;
-  const char *strFile = "Test.json";
+  DJSON_Array aConfigArray;
+  const char *strArrayFile = "Test2.json";
 
-  // Try to parse the file
-  if (ParseConfig(strFile, mapConfig) == DJSON_OK)
+  // Try to parse the file with a JSON array
+  if (ParseConfig(strArrayFile, aConfigArray) == DJSON_OK)
+  {
+    // Print out the loaded config
+    string strConfig;
+    DJSON_PrintArray(aConfigArray, strConfig, 0);
+
+    std::cout << "JSON array - " << aConfigArray.Count() << " elements:\n" << strConfig << "\n\n";
+  }
+
+  CConfigBlock mapConfigBlock;
+  const char *strBlockFile = "Test.json";
+
+  // Try to parse the file with a JSON block
+  if (ParseConfig(strBlockFile, mapConfigBlock) == DJSON_OK)
   {
     // Check for value existence
-    if (mapConfig.FindKeyIndex("Hello") != -1) { // Also valid: mapConfig.GetValue("Hello", <reference>)
-      mapConfig["Hello"] = string("How are you?");
+    if (mapConfigBlock.FindKeyIndex("Hello") != -1) { // Also valid: mapConfigBlock.GetValue("Hello", <reference>)
+      mapConfigBlock["Hello"] = string("How are you?");
 
     } else {
       CustomPrint("\"Hello\" key does not exist!\n");
@@ -55,8 +68,8 @@ int main() {
 
     // Check for integer type and change it
     int iVal;
-    if (mapConfig.GetValue("String", iVal)) {
-      CConfigValue &cvString = mapConfig["String"];
+    if (mapConfigBlock.GetValue("String", iVal)) {
+      CConfigValue &cvString = mapConfigBlock["String"];
 
       cvString = 10;
       CustomPrint("Changed number of a \"String\"!\n");
@@ -67,8 +80,8 @@ int main() {
     
     // Check for any type and change it
     CConfigValue cvVal;
-    if (mapConfig.GetValue("String", cvVal)) {
-      CConfigValue &cvString = mapConfig["String"];
+    if (mapConfigBlock.GetValue("String", cvVal)) {
+      CConfigValue &cvString = mapConfigBlock["String"];
 
       cvString = string("New string!");
       CustomPrint("Changed \"String\" value!\n");
@@ -79,7 +92,7 @@ int main() {
 
     // Check for null value
     CConfigBlock cbPerson;
-    if (mapConfig.GetValue("PERSONAL BLOCK", cbPerson))
+    if (mapConfigBlock.GetValue("PERSONAL BLOCK", cbPerson))
     {
       // Uncomment to see a different result
       // cbPerson["spouse"] = string("Jane Doe");
@@ -96,14 +109,14 @@ int main() {
     }
 
     // Directly change the value
-    CConfigValue &cvArrayElement = mapConfig["array"].cv_aArray[2];       // String: "nice"
+    CConfigValue &cvArrayElement = mapConfigBlock["array"].cv_aArray[2];  // String: "nice"
     cvArrayElement = string(cvArrayElement.cv_strValue) + string(" one"); // String: "nice one"
 
     // Print out the loaded config
     string strConfig;
-    DJSON_PrintBlock(mapConfig, strConfig, 0);
+    DJSON_PrintBlock(mapConfigBlock, strConfig, 0);
 
-    std::cout << "\nJSON file:\n" << strConfig << "\n\n";
+    std::cout << "\nJSON block - " << mapConfigBlock.Count() << " elements:\n" << strConfig << "\n\n";
   }
 
   return 0;

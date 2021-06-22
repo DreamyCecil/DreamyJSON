@@ -1,4 +1,4 @@
-/* Copyright (c) 2020 Dreamy Cecil
+/* Copyright (c) 2020-2021 Dreamy Cecil
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,13 @@ SOFTWARE. */
 #include "../Values/ConfigBlock.h"
 #include "ParserToken.h"
 
-// Parse JSON config
+// Config parser
+DJSON_API DJSON_ERROR ParseConfigTokens(const char *strConfigFile);
+
+// Parse JSON block
 DJSON_API DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Block &mapConfig);
+// Parse JSON array
+DJSON_API DJSON_ERROR ParseConfig(const char *strConfigFile, DJSON_Array &aConfig);
 
 // Array parser
 DJSON_API int ParseArray(DJSON_Array &aArray);
