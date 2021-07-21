@@ -30,8 +30,8 @@ class DJSON_API CConfigElement {
 };
 
 // Define value types
-typedef CDList<class CConfigValue> DJSON_Array;
-typedef CDMap<DJSON_String, class CConfigValue> DJSON_Block;
+typedef DSList<class CConfigValue> DJSON_Array;
+typedef DSMap<DJSON_String, class CConfigValue> DJSON_Block;
 
 // Print the array
 void DJSON_PrintArray(DJSON_Array &aArray, DJSON_String &strPrint, const int &iLevel);

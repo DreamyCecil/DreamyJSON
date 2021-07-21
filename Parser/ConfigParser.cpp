@@ -20,7 +20,7 @@ SOFTWARE. */
 
 #include "ConfigParser.h"
 
-static CDList<CParserToken> _aptTokens; // Config tokens
+static DSList<CParserToken> _aptTokens; // Config tokens
 static int _iToken = 0; // Current token
 static int _ctTokens = 0; // Amount of tokens
 
