@@ -172,7 +172,12 @@ DJSON_ERROR ParseConfigTokens(const char *strConfigFile) {
             if (bPreDot) {
               char **ppstrEnd = NULL;
 
-              __int64 iValue = strtoll(strString.c_str(), ppstrEnd, 10);
+              #if defined(_MSC_VER) && _MSC_VER < 1700
+                __int64 iValue = strtol(strString.c_str(), ppstrEnd, 10);
+              #else
+                __int64 iValue = strtoll(strString.c_str(), ppstrEnd, 10);
+              #endif
+
               AddToken(EPT_INDEX, iLine, iValue);
 
             // float
@@ -208,13 +213,13 @@ DJSON_ERROR ParseConfigTokens(const char *strConfigFile) {
             DJSON_String strName = strConfig.substr(iStart, iPos - iStart);
             
             if (strName == "true") {
-              AddToken(EPT_INDEX, iLine, 1LL);
+              AddToken(EPT_INDEX, iLine, __int64(1));
               
             } else if (strName == "false") {
-              AddToken(EPT_INDEX, iLine, 0LL);
+              AddToken(EPT_INDEX, iLine, __int64(0));
 
             } else if (strName == "null") {
-              AddToken(EPT_NULL, iLine, 0LL);
+              AddToken(EPT_NULL, iLine, __int64(0));
               
             } else {
               DJSON_Throw(DJSON_CONST, "Unknown constant '%s' on line %d", strName.c_str(), iLine);

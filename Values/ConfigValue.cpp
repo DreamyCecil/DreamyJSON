@@ -104,7 +104,11 @@ void CConfigValue::PrintValue(DJSON_String &strValue, const int &iLevel, bool bH
 
   switch (cv_eType) {
     case CVT_NULL:   strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << "null"; break;
-    case CVT_INDEX:  strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << cv_iValue; break;
+    #if defined(_MSC_VER) && _MSC_VER < 1700
+      case CVT_INDEX:  strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << int(cv_iValue); break;
+    #else
+      case CVT_INDEX:  strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << cv_iValue; break;
+    #endif
     case CVT_FLOAT:  strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << cv_dValue; break;
     case CVT_STRING: strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << "\"" << cv_strValue << "\""; break;
 

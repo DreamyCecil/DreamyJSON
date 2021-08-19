@@ -56,10 +56,10 @@ class DJSON_API CParserToken {
     
     // Constructors
     CParserToken(void) :
-      pt_eTokenType(EPT_UNKNOWN), pt_iLine(0), pt_iValue(0LL) {};
+      pt_eTokenType(EPT_UNKNOWN), pt_iLine(0), pt_iValue(0) {};
     
     CParserToken(const int &iType, const int &iLine) :
-      pt_eTokenType(iType), pt_iLine(iLine), pt_iValue(0LL) {};
+      pt_eTokenType(iType), pt_iLine(iLine), pt_iValue(0) {};
       
     CParserToken(const int &iType, const int &iLine, const __int64 &i) :
       pt_eTokenType(iType), pt_iLine(iLine), pt_iValue(i) {};
