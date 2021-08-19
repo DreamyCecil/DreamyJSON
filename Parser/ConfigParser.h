@@ -43,5 +43,6 @@ DJSON_API int ParseValue(CConfigValue &cvValue);
 
 // Add one token to the list
 DJSON_API void AddToken(const EParserToken &eType, const int &iLine);
-DJSON_API void AddToken(const EParserToken &eType, const int &iLine, const float &fValue);
+DJSON_API void AddToken(const EParserToken &eType, const int &iLine, const __int64 &iValue);
+DJSON_API void AddToken(const EParserToken &eType, const int &iLine, const double &fValue);
 DJSON_API void AddToken(const EParserToken &eType, const int &iLine, const DJSON_String &strValue);

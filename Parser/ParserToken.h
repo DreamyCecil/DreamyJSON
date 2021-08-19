@@ -49,19 +49,23 @@ class DJSON_API CParserToken {
     int pt_iLine; // token place
     
     union {
-      float pt_fValue; // float value
-      char pt_strValue[256]; // string value
+      __int64 pt_iValue; // index value
+      double pt_dValue; // float value
+      char pt_strValue[1024]; // string value
     };
     
     // Constructors
     CParserToken(void) :
-      pt_eTokenType(EPT_UNKNOWN), pt_iLine(0), pt_fValue(0.0f) {};
+      pt_eTokenType(EPT_UNKNOWN), pt_iLine(0), pt_iValue(0LL) {};
     
     CParserToken(const int &iType, const int &iLine) :
-      pt_eTokenType(iType), pt_iLine(iLine), pt_fValue(0.0f) {};
+      pt_eTokenType(iType), pt_iLine(iLine), pt_iValue(0LL) {};
       
-    CParserToken(const int &iType, const int &iLine, const float &f) :
-      pt_eTokenType(iType), pt_iLine(iLine), pt_fValue(f) {};
+    CParserToken(const int &iType, const int &iLine, const __int64 &i) :
+      pt_eTokenType(iType), pt_iLine(iLine), pt_iValue(i) {};
+      
+    CParserToken(const int &iType, const int &iLine, const double &d) :
+      pt_eTokenType(iType), pt_iLine(iLine), pt_dValue(d) {};
       
     CParserToken(const int &iType, const int &iLine, const DJSON_String &str) :
       pt_eTokenType(iType), pt_iLine(iLine)

@@ -67,11 +67,11 @@ int main() {
     }
 
     // Check for integer type and change it
-    int iVal;
+    __int64 iVal;
     if (mapConfigBlock.GetValue("String", iVal)) {
       CConfigValue &cvString = mapConfigBlock["String"];
 
-      cvString = 10;
+      cvString = 10LL;
       CustomPrint("Changed number of a \"String\"!\n");
 
     } else {
@@ -109,8 +109,10 @@ int main() {
     }
 
     // Directly change the value
-    CConfigValue &cvArrayElement = mapConfigBlock["array"].cv_aArray[2];  // String: "nice"
-    cvArrayElement = string(cvArrayElement.cv_strValue) + string(" one"); // String: "nice one"
+    if (mapConfigBlock.FindKeyIndex("array") != -1) {
+      CConfigValue &cvArrayElement = mapConfigBlock["array"].cv_aArray[2];  // String: "nice"
+      cvArrayElement = string(cvArrayElement.cv_strValue) + string(" one"); // String: "nice one"
+    }
 
     // Print out the loaded config
     string strConfig;

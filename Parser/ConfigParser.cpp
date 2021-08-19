@@ -167,10 +167,21 @@ DJSON_ERROR ParseConfigTokens(const char *strConfigFile) {
             
             // save the number
             DJSON_String strString = strConfig.substr(iStart, iPos - iStart);
-            float fValue = 0.0f;
-            sscanf(strString.c_str(), "%f", &fValue);
-            
-            AddToken((bPreDot ? EPT_INDEX : EPT_FLOAT), iLine, fValue);
+
+            // index
+            if (bPreDot) {
+              char **ppstrEnd = NULL;
+
+              __int64 iValue = strtoll(strString.c_str(), ppstrEnd, 10);
+              AddToken(EPT_INDEX, iLine, iValue);
+
+            // float
+            } else {
+              char **ppstrEnd = NULL;
+
+              double dValue = strtod(strString.c_str(), ppstrEnd);
+              AddToken(EPT_FLOAT, iLine, dValue);
+            }
           
           // start identifier names with an underscore or letters
           } else if (iChar == '_'
@@ -197,13 +208,13 @@ DJSON_ERROR ParseConfigTokens(const char *strConfigFile) {
             DJSON_String strName = strConfig.substr(iStart, iPos - iStart);
             
             if (strName == "true") {
-              AddToken(EPT_INDEX, iLine, 1);
+              AddToken(EPT_INDEX, iLine, 1LL);
               
             } else if (strName == "false") {
-              AddToken(EPT_INDEX, iLine, 0);
+              AddToken(EPT_INDEX, iLine, 0LL);
 
             } else if (strName == "null") {
-              AddToken(EPT_NULL, iLine, 0);
+              AddToken(EPT_NULL, iLine, 0LL);
               
             } else {
               DJSON_Throw(DJSON_CONST, "Unknown constant '%s' on line %d", strName.c_str(), iLine);
@@ -407,12 +418,12 @@ int ParseValue(CConfigValue &cvValue)
 
     // index value
     case EPT_INDEX:
-      cvValue.SetValue((int)ptValue.pt_fValue);
+      cvValue.SetValue(ptValue.pt_iValue);
       break;
       
     // float value
     case EPT_FLOAT:
-      cvValue.SetValue(ptValue.pt_fValue);
+      cvValue.SetValue(ptValue.pt_dValue);
       break;
     
     // string value
@@ -457,8 +468,12 @@ void AddToken(const EParserToken &eType, const int &iLine) {
   _aptTokens.Add(CParserToken(eType, iLine));
 };
 
-void AddToken(const EParserToken &eType, const int &iLine, const float &fValue) {
-  _aptTokens.Add(CParserToken(eType, iLine, fValue));
+void AddToken(const EParserToken &eType, const int &iLine, const __int64 &iValue) {
+  _aptTokens.Add(CParserToken(eType, iLine, iValue));
+};
+
+void AddToken(const EParserToken &eType, const int &iLine, const double &dValue) {
+  _aptTokens.Add(CParserToken(eType, iLine, dValue));
 };
 
 void AddToken(const EParserToken &eType, const int &iLine, const DJSON_String &strValue) {

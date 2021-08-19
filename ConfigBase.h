@@ -36,7 +36,8 @@ typedef std::ostringstream DJSON_StringStream;
 
 // Include structures if needed
 #ifndef DJSON_EXCLUDE_DSTRUCT
-#include "DreamyStructures/DataStructures.h"
+  #define DSTRUCT_USE_VECTOR
+  #include "DreamyStructures/DataStructures.h"
 #endif
 
 // Error codes

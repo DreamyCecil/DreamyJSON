@@ -43,8 +43,8 @@ class DJSON_API CConfigValue : CConfigElement {
     
     // Values
     union {
-      int cv_iValue; // index value
-      float cv_fValue; // float value
+      __int64 cv_iValue; // index value
+      double cv_dValue; // float value
       char cv_strValue[256]; // string value
     };
 
@@ -54,16 +54,16 @@ class DJSON_API CConfigValue : CConfigElement {
     
     // Constructors
     CConfigValue(void);
-    CConfigValue(const int &iValue);
-    CConfigValue(const float &fValue);
+    CConfigValue(const __int64 &iValue);
+    CConfigValue(const double &dValue);
     CConfigValue(const DJSON_String &strValue);
     CConfigValue(const DJSON_Array &aArray);
     CConfigValue(const DJSON_Block &mapBlock);
     
     // Set new value
     void SetNull(void);
-    void SetValue(const int &iValue);
-    void SetValue(const float &fValue);
+    void SetValue(const __int64 &iValue);
+    void SetValue(const double &dValue);
     void SetValue(const DJSON_String &strValue);
     void SetValue(const DJSON_Array &aArray);
     void SetValue(const DJSON_Block &mapBlock);
@@ -73,7 +73,7 @@ class DJSON_API CConfigValue : CConfigElement {
     void Clear(void);
 
     // Get number value
-    float GetNumber(void);
+    double GetNumber(void);
     
     // Print the value
     void PrintValue(DJSON_String &strValue, const int &iLevel, bool bHasKey = false);

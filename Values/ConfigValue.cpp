@@ -25,12 +25,12 @@ CConfigValue::CConfigValue(void) : CConfigElement() {
   SetNull();
 };
 
-CConfigValue::CConfigValue(const int &iValue) : CConfigElement() {
+CConfigValue::CConfigValue(const __int64 &iValue) : CConfigElement() {
   SetValue(iValue);
 };
 
-CConfigValue::CConfigValue(const float &fValue) : CConfigElement() {
-  SetValue(fValue);
+CConfigValue::CConfigValue(const double &dValue) : CConfigElement() {
+  SetValue(dValue);
 };
 
 CConfigValue::CConfigValue(const DJSON_String &strValue) : CConfigElement() {
@@ -51,14 +51,14 @@ void CConfigValue::SetNull(void) {
   cv_iValue = 0;
 };
 
-void CConfigValue::SetValue(const int &iValue) {
+void CConfigValue::SetValue(const __int64 &iValue) {
   cv_eType = CVT_INDEX;
   cv_iValue = iValue;
 };
 
-void CConfigValue::SetValue(const float &fValue) {
+void CConfigValue::SetValue(const double &dValue) {
   cv_eType = CVT_FLOAT;
-  cv_fValue = fValue;
+  cv_dValue = dValue;
 };
 
 void CConfigValue::SetValue(const DJSON_String &strValue) {
@@ -89,12 +89,12 @@ void CConfigValue::Clear(void) {
 };
 
 // Get number value
-float CConfigValue::GetNumber(void) {
+double CConfigValue::GetNumber(void) {
   switch (cv_eType) {
-    case CVT_INDEX: return float(cv_iValue);
-    case CVT_FLOAT: return cv_fValue;
+    case CVT_INDEX: return double(cv_iValue);
+    case CVT_FLOAT: return cv_dValue;
   }
-  return 0.0f;
+  return 0.0;
 };
 
 // Print the value
@@ -105,7 +105,7 @@ void CConfigValue::PrintValue(DJSON_String &strValue, const int &iLevel, bool bH
   switch (cv_eType) {
     case CVT_NULL:   strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << "null"; break;
     case CVT_INDEX:  strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << cv_iValue; break;
-    case CVT_FLOAT:  strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << cv_fValue; break;
+    case CVT_FLOAT:  strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << cv_dValue; break;
     case CVT_STRING: strPrint << DJSON_ConfigTabs(iKeyLevel).c_str() << "\"" << cv_strValue << "\""; break;
 
     case CVT_ARRAY: {
