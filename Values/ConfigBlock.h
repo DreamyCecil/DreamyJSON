@@ -34,8 +34,10 @@ class DJSON_API CConfigBlock : public DJSON_Block {
 
     // Get integer value
     bool GetValue(DJSON_String strKey, __int64 &iValue);
+    bool GetValue(DJSON_String strKey, int &iValue);
     // Get float value
     bool GetValue(DJSON_String strKey, double &dValue);
+    bool GetValue(DJSON_String strKey, float &fValue);
     // Get string value
     bool GetValue(DJSON_String strKey, DJSON_String &strValue);
     // Get array

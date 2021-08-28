@@ -45,6 +45,19 @@ bool CConfigBlock::GetValue(DJSON_String strKey, __int64 &iValue) {
   return false;
 };
 
+bool CConfigBlock::GetValue(DJSON_String strKey, int &iValue) {
+  ASSERT_KEY(iKey, strKey);
+
+  // get the value
+  CConfigValue &cv = DJSON_Block::GetValue(iKey);
+
+  if (cv.cv_eType == CVT_INDEX) {
+    iValue = (int)cv.cv_iValue;
+    return true;
+  }
+  return false;
+};
+
 // Get float value
 bool CConfigBlock::GetValue(DJSON_String strKey, double &dValue) {
   ASSERT_KEY(iKey, strKey);
@@ -54,6 +67,19 @@ bool CConfigBlock::GetValue(DJSON_String strKey, double &dValue) {
 
   if (cv.cv_eType == CVT_FLOAT) {
     dValue = cv.cv_dValue;
+    return true;
+  }
+  return false;
+};
+
+bool CConfigBlock::GetValue(DJSON_String strKey, float &fValue) {
+  ASSERT_KEY(iKey, strKey);
+
+  // get the value
+  CConfigValue &cv = DJSON_Block::GetValue(iKey);
+
+  if (cv.cv_eType == CVT_FLOAT) {
+    fValue = (float)cv.cv_dValue;
     return true;
   }
   return false;
