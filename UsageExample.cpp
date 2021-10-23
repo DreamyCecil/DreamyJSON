@@ -71,7 +71,7 @@ int main() {
     if (mapConfigBlock.GetValue("String", iVal)) {
       CConfigValue &cvString = mapConfigBlock["String"];
 
-      cvString = 10LL;
+      cvString = __int64(10);
       CustomPrint("Changed number of a \"String\"!\n");
 
     } else {
